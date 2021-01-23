@@ -48,19 +48,22 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .memu {
   margin-top: 10px;
   color: #fff;
   font-size: 25px;
 }
 .search {
-  margin-top: 10px;
-  width: 300px;
-  background-color: #41436a;
+  margin-top: 8px !important;
+  width: 150px !important;
+  background-color: #000 !important;
 }
 .search2 {
-  font-size: 34px;
+  width: 300px !important;
+  font-size: 20px;
+  border-radius: 10px !important;
+  background-color: #000 !important;
 }
 .mt-5 {
   margin-top: 10px;

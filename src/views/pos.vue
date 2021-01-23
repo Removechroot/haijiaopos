@@ -8,7 +8,9 @@
         <el-aside width="800px">
           <letf-nav></letf-nav>
         </el-aside>
-        <el-main>Main</el-main>
+        <el-main>
+          <right-nav></right-nav>
+        </el-main>
       </el-container>
     </el-container>
   </div>
@@ -17,10 +19,12 @@
 <script>
 import topnav from "../components/posIndex/topNav";
 import LetfNav from "../components/posIndex/letfNav.vue";
+import rightNav from "../components/posIndex/rightNav";
 export default {
   components: {
     topnav,
     LetfNav,
+    rightNav,
   },
 };
 </script>
