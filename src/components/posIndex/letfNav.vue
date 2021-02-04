@@ -73,15 +73,23 @@
             </div>
             <div>
               <div class="t-centen">
-                <el-button type="primary" class="mr-2" style="font-size: 30px"
-                  >现金</el-button
-                >
-                <el-button type="primary" class="mr-2" style="font-size: 30px"
-                  >扫码支付</el-button
-                >
-                <el-button type="primary" class="mr-2" style="font-size: 30px"
-                  >会员支付</el-button
-                >
+                <div>
+                  <i class="iconfont icon-xianjin"></i>
+                  <i>现金</i>
+                </div>
+                <div>
+                  <i class="iconfont icon-REXsaomazhifu_"></i>
+                  <i>扫码支付</i>
+                </div>
+                <div>
+                  <i class="iconfont icon-huiyuan"></i>
+                  <i>会员支付</i>
+                </div>
+                <div>
+                  <i id="price-1">共</i>
+
+                  <i id="price-2">98元</i>
+                </div>
               </div>
             </div>
           </div>
@@ -89,13 +97,12 @@
         <!-- 下层 -->
         <el-col :span="4">
           <div class="handle">
-            <!-- <el-input-number size="small" v-model="num3"></el-input-number> -->
             <div class="number">
-              <el-button class="number-button">
+              <el-button class="number-button" @click="handleClickSub">
                 <i>-</i>
               </el-button>
               <div class="numer-count">{{ number }}</div>
-              <el-button class="number-button">
+              <el-button class="number-button" @click="handleClickAdd">
                 <i>+</i>
               </el-button>
             </div>
@@ -173,6 +180,22 @@ export default {
       ],
     };
   },
+  methods: {
+    handleClickAdd() {
+      if (this.number == 0 || this.number >= 99) {
+        this.number = 1;
+      } else {
+        this.number++;
+      }
+    },
+    handleClickSub() {
+      if (this.number <= 1 || this.number >= 99) {
+        this.number = 1;
+      } else {
+        this.number--;
+      }
+    },
+  },
 };
 </script>
 
@@ -193,8 +216,50 @@ export default {
   text-align: center;
   float: left;
 }
-.mr-2 {
-  margin-right: 20px !important;
+.t-centen div {
+  width: 120px;
+  height: 120px;
+  border: 1px solid #000;
+  float: left;
+  margin-right: 28px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  color: black;
+}
+.t-centen div:nth-of-type(1) {
+  background-color: #f56c6c;
+  cursor: pointer;
+}
+.t-centen div:nth-of-type(2) {
+  background-color: #5faefc;
+  cursor: pointer;
+}
+.t-centen div:nth-of-type(3) {
+  background-color: #e64980;
+  cursor: pointer;
+}
+.t-centen div:nth-of-type(4) {
+  background-color: #f76707;
+}
+.t-centen div i:nth-of-type(1) {
+  height: 80px;
+  font-size: 60px;
+  align-items: center;
+  justify-content: center;
+  color: rgb(105, 5, 5);
+}
+.t-centen div i:nth-of-type(2) {
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+#price-1 {
+  font-size: 50px;
+}
+#price-2 {
+  font-size: 40px;
+  color: red;
 }
 .handle {
   margin-top: 70px;
@@ -229,7 +294,7 @@ export default {
   border-left: 1px solid rgb(219, 219, 219);
   border-right: 1px solid rgb(219, 219, 219);
   text-align: center;
-  font-size: 45px;
+  font-size: 38px;
 }
 
 .number-button:nth-of-type(1) {
