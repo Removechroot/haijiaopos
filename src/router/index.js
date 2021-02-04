@@ -1,15 +1,28 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Pos from "../views/pos.vue";
+import login from "../views/login"
+import menu from "../views/menu"
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/",
+    path: "/pos",
     name: "Pos",
     component: Pos
+  },
+  {
+    path: "/",
+    name: "login",
+    component: login
+  },
+  {
+    path: "/menu",
+    name: "menu",
+    component: menu
   }
+
   // ,
   // {
   //   path: "/about",

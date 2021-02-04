@@ -7,21 +7,31 @@
           <div>
             <el-row>
               <el-col :span="8">
-                <el-button
-                  type="text"
-                  size="300"
-                  icon="el-icon-user-solid"
-                  style="font-size: 25px"
-                  >会员登陆</el-button
-                >
+                <el-button type="text" @click="openVip">
+                  <span
+                    class="iconfont icon-huangguan"
+                    style="font-size: 25px; color: #a67552"
+                  ></span>
+                  <span style="font-size: 25px; margin-left: 5px"
+                    >会员登陆</span
+                  >
+                </el-button>
               </el-col>
               <el-col :span="8">
-                <el-button type="text" size="default" style="font-size: 25px"
+                <el-button
+                  type="text"
+                  size="default"
+                  style="font-size: 25px"
+                  @click="menunumber"
                   >输入餐牌号</el-button
                 >
               </el-col>
               <el-col :span="8">
-                <el-button type="text" size="default" style="font-size: 25px"
+                <el-button
+                  type="text"
+                  size="default"
+                  style="font-size: 25px"
+                  @click="clearmuen"
                   >清空</el-button
                 >
               </el-col>
@@ -33,16 +43,18 @@
                 border
                 style="width: 100%"
                 class="mb-3"
+                highlight-current-row
+                @current-change="handleCurrentChange"
               >
                 <el-table-column
-                  prop="numer"
+                  prop="number"
                   label="序号"
                   width="70"
                   :resizable="false"
                 >
                 </el-table-column>
                 <el-table-column
-                  prop="dishes"
+                  prop="foodName"
                   label="菜品"
                   width="180"
                   :resizable="false"
@@ -63,13 +75,37 @@
                 >
                 </el-table-column>
                 <el-table-column label="操作">
-                  <template>
-                    <ElButton type="danger" style="font-size: 20px"
+                  <template slot-scope="scope">
+                    <ElButton
+                      type="danger"
+                      style="font-size: 20px"
+                      @click="delmuem(scope.row.numer)"
                       >删除
                     </ElButton>
                   </template>
                 </el-table-column>
               </el-table>
+              <div class="pay">
+                <el-row>
+                  <el-col :span="14">
+                    <el-checkbox
+                      style="float: left"
+                      label="整单打包"
+                      border
+                      size="medium"
+                      class="checkbox"
+                    ></el-checkbox>
+                  </el-col>
+                  <el-col
+                    :span="4"
+                    style="color: #dfddd7; font-size: 24px; line-height: 40px"
+                    >共{{ menucount }}项</el-col
+                  >
+                  <el-col :span="6" style="font-size: 30px"
+                    >￥{{ $store.state.totalPrices }}</el-col
+                  >
+                </el-row>
+              </div>
             </div>
             <div>
               <div class="t-centen">
@@ -86,9 +122,8 @@
                   <i>会员支付</i>
                 </div>
                 <div>
-                  <i id="price-1">共</i>
-
-                  <i id="price-2">98元</i>
+                  <i class=""></i>
+                  <i>更多支付</i>
                 </div>
               </div>
             </div>
@@ -101,24 +136,108 @@
               <el-button class="number-button" @click="handleClickSub">
                 <i>-</i>
               </el-button>
-              <div class="numer-count">{{ number }}</div>
+              <div class="numer-count">{{ selectedData.count || null }}</div>
               <el-button class="number-button" @click="handleClickAdd">
                 <i>+</i>
               </el-button>
             </div>
-            <el-button plain class="mt-size">规格/做法</el-button>
-            <el-button plain class="mt-size">加料</el-button>
-            <el-button plain class="mt-size">打折/减免</el-button>
-            <el-button plain class="mt-size">删除</el-button>
-            <el-button plain class="mt-size">批量操作</el-button>
+            <el-button
+              plain
+              class="mt-size"
+              @click="specificationVisible = true"
+              >规格/做法</el-button
+            >
+            <el-button plain class="mt-size" @click="reinforcedVisible = true"
+              >加料</el-button
+            >
+            <el-button plain class="mt-size" @click="discount"
+              >打折/减免</el-button
+            >
+            <el-button plain class="mt-size" @click="delitem">删除</el-button>
+            <el-button plain class="mt-size" @click="operation"
+              >批量操作</el-button
+            >
             <el-divider>
               <i class="centen-text">订单操作</i>
             </el-divider>
-            <el-button plain class="mt-size">整单备注</el-button>
+            <el-button plain class="mt-size" @click="comment"
+              >整单备注</el-button
+            >
           </div>
         </el-col>
       </el-row>
     </el-card>
+    <!-- 规格/做法 -->
+    <el-dialog
+      title="规格/做法"
+      :visible.sync="specificationVisible"
+      width="30%"
+    >
+      <div class="radio">
+        <el-radio v-model="radio1" label="1" border class="radioitem"
+          >粗面</el-radio
+        >
+        <el-radio v-model="radio1" label="2" border class="radioitem"
+          >细面</el-radio
+        >
+        <el-radio v-model="radio1" label="3" border class="radioitem"
+          >米粉</el-radio
+        >
+        <el-radio v-model="radio1" label="4" border class="radioitem"
+          >河粉</el-radio
+        >
+        <el-radio v-model="radio1" label="5" border class="radioitem"
+          >刀切面</el-radio
+        >
+        <el-radio v-model="radio1" label="6" border class="radioitem"
+          >干捞</el-radio
+        >
+        <el-radio v-model="radio1" label="7" border class="radioitem"
+          >干捞</el-radio
+        >
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="specificationVisible = false">取 消</el-button>
+        <el-button type="primary" @click="specificationVisible = false"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
+    <!-- 加料 -->
+    <el-dialog title="加料" :visible.sync="reinforcedVisible" width="30%">
+      <div class="radio">
+        <el-radio v-model="radio2" label="1" border class="radioitem"
+          >鱼蛋</el-radio
+        >
+        <el-radio v-model="radio2" label="2" border class="radioitem"
+          >潮州牛丸</el-radio
+        >
+        <el-radio v-model="radio2" label="3" border class="radioitem"
+          >米饭</el-radio
+        >
+        <el-radio v-model="radio2" label="4" border class="radioitem"
+          >鸡排</el-radio
+        >
+        <el-radio v-model="radio2" label="5" border class="radioitem"
+          >牛肉</el-radio
+        >
+        <el-radio v-model="radio2" label="6" border class="radioitem"
+          >羊肉</el-radio
+        >
+        <el-radio v-model="radio2" label="7" border class="radioitem"
+          >猪肉</el-radio
+        >
+        <el-radio v-model="radio2" label="7" border class="radioitem"
+          >辣椒酱</el-radio
+        >
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="reinforcedVisible = false">取 消</el-button>
+        <el-button type="primary" @click="reinforcedVisible = false"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -126,80 +245,180 @@
 export default {
   data() {
     return {
-      number: 1,
-      tableData: [
-        {
-          numer: "1",
-          dishes: "红枣波轻薄",
-          name: "王小虎",
-          price: "18元",
-          count: "1",
-        },
-        {
-          numer: "1",
-          dishes: "红枣波轻薄",
-          name: "王小虎",
-          price: "18元",
-          count: "1",
-        },
-        {
-          numer: "1",
-          dishes: "红枣波轻薄",
-          name: "王小虎",
-          price: "18元",
-          count: "1",
-        },
-        {
-          numer: "1",
-          dishes: "红枣波轻薄",
-          name: "王小虎",
-          price: "18元",
-          count: "1",
-        },
-        {
-          numer: "1",
-          dishes: "红枣波轻薄",
-          name: "王小虎",
-          price: "18元",
-          count: "1",
-        },
-        {
-          numer: "1",
-          dishes: "红枣波轻薄",
-          name: "王小虎",
-          price: "18元",
-          count: "1",
-        },
-        {
-          numer: "1",
-          dishes: "红枣波轻薄",
-          name: "王小虎",
-          price: "18元",
-          count: "1",
-        },
-      ],
+      menucount: 1,
+      price: 0,
+      specificationVisible: false,
+      reinforcedVisible: false,
+      radio1: 1,
+      radio2: 2,
+      tableData: [],
+      selectedData: {},
     };
   },
+  computed: {},
+  updated() {
+    this.tableData = this.$store.state.menulist;
+    this.amount();
+    this.$store.commit("totalPrices");
+  },
+  mounted() {
+    this.amount();
+  },
+
   methods: {
+    // 菜单增减操作
     handleClickAdd() {
-      if (this.number == 0 || this.number >= 99) {
-        this.number = 1;
-      } else {
-        this.number++;
+      if (this.selectedData == {} || this.selectedData.count >= 99) {
+        return;
       }
+
+      this.selectedData.count++;
+      this.$store.commit("totalPrices");
     },
     handleClickSub() {
-      if (this.number <= 1 || this.number >= 99) {
-        this.number = 1;
-      } else {
-        this.number--;
+      if (this.selectedData == {} || this.selectedData.count <= 1) return;
+      this.selectedData.count--;
+      this.$store.commit("totalPrices");
+    },
+    // 会员登陆
+    openVip() {
+      this.$prompt("请输入会员编号", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        inputPattern: /^[0-9]*$/,
+      }).then(({ value }) => {
+        if (value == 123) {
+          this.$notify({
+            title: "认证成功",
+            message: `尊贵${value}的黑卡会员,享受8.5折优惠`,
+          });
+        } else {
+          this.$notify({
+            title: "认证失败",
+            message: `请重新检查会员卡卡号及有效期是否失效`,
+          });
+        }
+      });
+    },
+    // 输入餐牌号
+    menunumber() {
+      this.$prompt("请输入就餐牌号", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        inputPattern: /^[0-9]*$/,
+      }).then(({ value }) => {
+        this.$message({
+          type: "success",
+          message: value,
+        });
+      });
+    },
+    // 清空列表功能
+    clearmuen() {
+      this.$confirm("此操作将清空菜单,是否继续?", "继续", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(() => {
+        this.$message({
+          message: "清空成功",
+          type: "success",
+        });
+        this.tableData = [];
+        this.$store.commit("totalPrices");
+        this.selectedData.count = 0;
+      });
+    },
+    // 删除操作
+    delmuem(number) {
+      let tablist = this.tableData;
+      let res = tablist.findIndex((item) => {
+        return item.numer == number;
+      });
+      this.$message({
+        type: "success",
+        message: "删除成功",
+      });
+      this.tableData.splice(res, 1);
+      this.$store.commit("totalPrices");
+
+      this.selectedData.count = null;
+    },
+    // 共计统计方法
+    amount() {
+      let count = 0;
+      for (const item of this.tableData) {
+        count += parseInt(item.count);
       }
+      this.menucount = count;
+    },
+    // 选择数据方法
+    handleCurrentChange(e) {
+      this.selectedData = e;
+    },
+    // 规格/做法
+    specification() {},
+    // 加料
+    // 打折/减免
+    discount() {
+      this.$notify({
+        title: "该功能未完善",
+        message:
+          "反正这个功能没做好,别看了!反正这个功能没做好,别看了!反正这个功能没做好,别看了!",
+      });
+    },
+    // 删除
+    delitem() {
+      this.$notify({
+        title: "该功能未完善",
+        message:
+          "反正这个功能没做好,别看了!反正这个功能没做好,别看了!反正这个功能没做好,别看了!反正这个功能没做好,别看了!",
+      });
+    },
+    // 批量操作
+    operation() {
+      this.$notify({
+        title: "该功能未完善",
+        message:
+          "反正这个功能没做好,别看了!反正这个功能没做好,别看了!反正这个功能没做好,别看了!反正这个功能没做好,别看了!",
+      });
+    },
+    // 整单备注
+    comment() {
+      this.$prompt("请输入备注信息", "整单备注", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+      }).then(({ value }) => {
+        this.$message({
+          type: "success",
+          message: `备注 ${value} 成功`,
+        });
+      });
     },
   },
 };
 </script>
 
 <style scoped>
+.radio {
+  width: 100%;
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: start;
+  align-items: start;
+}
+.radioitem {
+  width: 100px;
+  margin-top: 0px !important;
+  margin-top: 20px !important;
+}
+.item {
+  margin-top: 10px;
+  margin-right: 40px;
+  border: 1px solid black;
+}
 .box-card {
   margin: 10px;
   height: 850px;
@@ -214,7 +433,6 @@ export default {
 .t-centen {
   margin-top: 15px;
   text-align: center;
-  float: left;
 }
 .t-centen div {
   width: 120px;
@@ -240,7 +458,8 @@ export default {
   cursor: pointer;
 }
 .t-centen div:nth-of-type(4) {
-  background-color: #f76707;
+  display: block;
+  background-color: #fff;
 }
 .t-centen div i:nth-of-type(1) {
   height: 80px;
@@ -254,13 +473,7 @@ export default {
   justify-content: center;
   font-size: 24px;
 }
-#price-1 {
-  font-size: 50px;
-}
-#price-2 {
-  font-size: 40px;
-  color: red;
-}
+
 .handle {
   margin-top: 70px;
   margin-left: 8px;
@@ -311,5 +524,21 @@ export default {
 }
 .number-button i {
   font-size: 30px !important;
+}
+.pay {
+  width: 605px;
+  height: 30px;
+  padding: 10px 0;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-bottom: 1px solid #ebeef5;
+  border-left: 1px solid #ebeef5;
+  border-right: 1px solid #ebeef5;
+}
+.checkbox {
+  border: 1px solid #fff !important;
+}
+.checkbox > span {
+  width: 80px !important;
 }
 </style>

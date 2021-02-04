@@ -2,7 +2,11 @@
   <div>
     <el-row :gutter="20">
       <el-col :span="14"
-        ><div class="memu">
+        ><div
+          class="memu"
+          @click="$router.push('/menu')"
+          style="cursor: pointer"
+        >
           <i class="el-icon-s-grid"></i>
           菜单
         </div></el-col

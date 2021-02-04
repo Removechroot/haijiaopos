@@ -16,7 +16,7 @@ body,
   background-color: #f1f3f5;
   font-size: 20px;
   font-family: "Microsoft YaHei", "微软雅黑", "Helvetica Neue", Helvetica,
-    "PingFang SC", "Hiragino Sans GB", Arial, sans-serif;
+    "PingFang SC", "Hiragino Sans GB", Arial, sans-serif !important;
 }
 .cell {
   text-align: center !important;
